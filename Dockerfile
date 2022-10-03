@@ -19,9 +19,6 @@ RUN adduser -D deno
 
 COPY --from=deno --link /deno /usr/local/bin/deno
 
-ENV NEOLOGD_DIC_PATH /usr/lib/x86_64-linux-gnu/mecab/dic/mecab-ipadic-neologd
-COPY --from=dic --link $NEOLOGD_DIC_PATH $NEOLOGD_DIC_PATH
-
 RUN apt-get update \
     && apt-get install -y mecab libmecab-dev mecab-ipadic-utf8 \
     && apt-get clean \
@@ -33,5 +30,8 @@ COPY --link deps.ts .
 RUN deno cache deps.ts
 COPY . .
 RUN deno cache main.ts
+
+ENV NEOLOGD_DIC_PATH /usr/lib/x86_64-linux-gnu/mecab/dic/mecab-ipadic-neologd
+COPY --from=dic --link $NEOLOGD_DIC_PATH $NEOLOGD_DIC_PATH
 
 CMD ["run", "--allow-net", "--allow-run", "--allow-env", "main.ts"]
