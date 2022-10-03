@@ -31,6 +31,7 @@ const parse_handler = async (request: Request) => {
   }
   const parsed = await parseWithNeologd(texts);
   if (parsed.isFailure()) {
+    console.error(`Parser Error!: ${parsed.error}`);
     return new Response("Parser Error", { status: 500 });
   }
 
