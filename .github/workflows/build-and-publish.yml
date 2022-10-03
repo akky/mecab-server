@@ -28,8 +28,9 @@ jobs:
         run: deno fmt --check
       - name: Run lint
         run: deno lint
-      - name: Run tests
-        run: deno test -A
+      # Nothing to test
+      # - name: Run tests
+      #   run: deno test -A
 
   build-image:
     name: Build Docker image, and Publish on main branch
