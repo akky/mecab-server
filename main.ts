@@ -7,7 +7,7 @@ const isStringArray = (value: unknown): value is string[] => {
     value.every((val) => typeof val === "string");
 };
 
-const convertFromBodyToJson = async (
+const convertFromBodyToJsonText = async (
   body: ReadableStream<Uint8Array> | null,
 ) => {
   const reader = await body?.getReader().read();
@@ -25,7 +25,7 @@ const parse_handler = async (request: Request) => {
     });
   }
 
-  const texts = (await convertFromBodyToJson(request.body)).texts;
+  const texts = (await convertFromBodyToJsonText(request.body)).texts;
   if (!isStringArray(texts)) {
     return new Response("Posted json has illegal type", { status: 400 });
   }
