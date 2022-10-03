@@ -1,5 +1,6 @@
 import { Buffer, readAll, serve } from "./deps.ts";
 import { parseWithNeologd } from "./parser.ts";
+import { tryCatch } from "./result.ts";
 
 const PARSE_ROUTE = new URLPattern({ pathname: "/parse" });
 const isStringArray = (value: unknown): value is string[] => {
@@ -14,7 +15,7 @@ const convertFromBodyToJsonText = async (
   const buf = await readAll(new Buffer(reader?.value));
   const decoder = new TextDecoder();
 
-  return JSON.parse(decoder.decode(buf));
+  return tryCatch(() => JSON.parse(decoder.decode(buf)), (e) => e as Error);
 };
 
 const parse_handler = async (request: Request) => {
@@ -25,11 +26,11 @@ const parse_handler = async (request: Request) => {
     });
   }
 
-  const texts = (await convertFromBodyToJsonText(request.body)).texts;
-  if (!isStringArray(texts)) {
+  const parsedTexts = await convertFromBodyToJsonText(request.body);
+  if (parsedTexts.isFailure() || !isStringArray(parsedTexts.value.texts)) {
     return new Response("Posted json has illegal type", { status: 400 });
   }
-  const parsed = await parseWithNeologd(texts);
+  const parsed = await parseWithNeologd(parsedTexts.value.texts);
   if (parsed.isFailure()) {
     console.error(`Parser Error!: ${parsed.error}`);
     return new Response("Parser Error", { status: 500 });
