@@ -35,4 +35,4 @@ RUN deno cache main.ts
 ENV NEOLOGD_DIC_PATH /usr/lib/x86_64-linux-gnu/mecab/dic/mecab-ipadic-neologd
 COPY --from=dic --link $NEOLOGD_DIC_PATH $NEOLOGD_DIC_PATH
 
-CMD ["run", "--allow-net", "--allow-run", "--allow-env", "main.ts"]
+CMD ["/usr/local/bin/deno", "run", "--allow-net", "--allow-run", "--allow-env", "main.ts"]
