@@ -1,3 +1,5 @@
+// https://qiita.com/frozenbonito/items/e708dfb3ab7c1fd3824d#%E4%BE%8B%E5%A4%96%E3%82%92-throw-%E3%81%99%E3%82%8B%E9%96%A2%E6%95%B0%E3%82%92%E6%89%B1%E3%81%86
+
 export type Result<T, E extends Error> = Success<T> | Failure<E>;
 
 export type PromiseResult<T, E extends Error> = Promise<Result<T, E>>;
