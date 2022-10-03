@@ -15,7 +15,7 @@ FROM denoland/deno:bin-1.26.0 AS deno
 
 ## Runner
 FROM debian:stable-slim
-RUN adduser -D deno
+RUN adduser deno
 
 COPY --from=deno --link /deno /usr/local/bin/deno
 
