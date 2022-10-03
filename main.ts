@@ -7,16 +7,18 @@ const isStringArray = (value: unknown): value is string[] => {
     value.every((val) => typeof val === "string");
 };
 
-const convertFromBodyToJson = async (body: ReadableStream<Uint8Array> | null) => {
+const convertFromBodyToJson = async (
+  body: ReadableStream<Uint8Array> | null,
+) => {
   const reader = await body?.getReader().read();
   const buf = await readAll(new Buffer(reader?.value));
   const decoder = new TextDecoder();
 
-  return JSON.parse(decoder.decode(buf))
-}
+  return JSON.parse(decoder.decode(buf));
+};
 
 const parse_handler = async (request: Request) => {
-  const expectedContentType = "application/json"
+  const expectedContentType = "application/json";
   if (request.headers.get("Content-Type") != expectedContentType) {
     return new Response(`Content-Type must be ${expectedContentType}`, {
       status: 400,
