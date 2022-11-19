@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  mecab-server:
+    container_name: mecab-server
+    build:
+      context: .
+    volumes:
+      - .:/var/www/server
+    working_dir: /var/www/server
+    ports:
+      - 8080:8080
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    name: my-network
