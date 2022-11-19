@@ -46,6 +46,12 @@ serve(async (request: Request) => {
     return await parse_handler(request);
   }
 
+  // GET request handler for server health check
+  const PARSE_HEALTH = new URLPattern({ pathname: "/health" })
+  if (request.method == "GET" && PARSE_HEALTH.exec(request.url)) {
+    return new Response(`Mecab API server is alive for ${request.url}`, { status: 200 });
+  }
+
   return new Response(`No route for ${request.url}`, { status: 404 });
 }, {
   port: 8080,
