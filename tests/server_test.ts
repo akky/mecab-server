@@ -1,7 +1,7 @@
 // url_test.ts
 import { assertEquals } from "https://deno.land/std@0.165.0/testing/asserts.ts";
 import * as Colors from "https://deno.land/std@0.95.0/fmt/colors.ts";
-//import { jason } from "https://deno.land/x/jason_formatter/mod.ts"; // JSON formatter
+import { jason } from "https://deno.land/x/jason_formatter/mod.ts"; // JSON formatter
 
 // https://github.com/hellgrenj/Rumpel/blob/main/tests/integration/util.ts
 const sleep = (ms: number) => {
@@ -66,7 +66,29 @@ Deno.test("POST API parse test with Japanese", async () => {
     gottenText,
     '[[{"surface":"わたし","feature":"名詞","featureDetails":["代名詞","一般","*"],"conjugationForms":["*","*"],"originalForm":"わたし","reading":"ワタシ","pronunciation":"ワタシ"},{"surface":"だ","feature":"助動詞","featureDetails":["*","*","*"],"conjugationForms":["特殊・ダ","基本形"],"originalForm":"だ","reading":"ダ","pronunciation":"ダ"},{"surface":"。","feature":"記号","featureDetails":["句点","*","*"],"conjugationForms":["*","*"],"originalForm":"。","reading":"。","pronunciation":"。"}]]'
   );
+  const parsedJson = JSON.parse(gottenText);
+  //console.log(parsedJson);
+  assertEquals(parsedJson.length, 1, "returned JSON does not have 1 result.");
+  assertEquals(parsedJson[0][0].surface, "わたし", "retuened JSON does not have an expected surface.");
+  assertEquals(parsedJson[0][1].feature, "助動詞", "retuened JSON does not have an expected feature.");
 });
+
+Deno.test("POST API parse test with 2 Japanese sentences", async () => {
+  const resp = await fetch('http://localhost:8080/parse', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ 'texts' : [ 'わたしだ。', 'いや、僕です。' ] }),
+  });
+  const gottenText = await resp.text()
+  //console.log(jason(gottenText));
+  const parsedJson = JSON.parse(gottenText);
+  //console.log(parsedJson);
+  assertEquals(parsedJson.length, 2, "returned JSON does not have 2 results.");
+  assertEquals(parsedJson[1][0].surface, "いや", "retuened JSON does not have an expected surface.");
+});
+
 /*
 const stopApiProcess = Deno.run({
   cmd: ["docker-compose", "--file", "docker-compose-api.yml", "down"],
