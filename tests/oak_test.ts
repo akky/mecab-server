@@ -47,30 +47,20 @@ await waitForEndpoint(apiHealthEndpoint);
 console.log(Colors.blue("starting test"));
 
 Deno.test("endpoint url test", () => {
-  const url = new URL("./health", "http://localhost:8080/");
-  assertEquals(url.href, "http://localhost:8080/health");
+  const url = new URL("./health", "http://localhost:8081/");
+  assertEquals(url.href, "http://localhost:8081/health");
 });
 
-Deno.test("GET health test", async () => {
-  const resp = await fetch("http://localhost:8080/health", {
-    method: "GET",
-    headers: {
-      "Content-Type": "text/plain",
-    },
-  });
-  const gottenText = await resp.text();
-  assertEquals(gottenText, '{"status":"ok","code":200}');
-});
-
-// curl "http://127.0.0.1:8080/parse" -H 'Content-Type:application/json'  -d '{ "texts": [ "わたしだ。" ]}'
+// curl "http://127.0.0.1:8080/mecab" -H 'Content-Type:application/json'  -d '{ "texts": [ "わたしだ。" ]}'
 Deno.test("POST API parse test with Japanese", async () => {
-  const resp = await fetch("http://localhost:8080/parse", {
+  const resp = await fetch("http://localhost:8081/mecab", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ "texts": ["わたしだ。"] }),
   });
+  //console.log(resp);
   const gottenText = await resp.text();
   //console.log(jason(gottenText));
   assertEquals(
@@ -93,7 +83,7 @@ Deno.test("POST API parse test with Japanese", async () => {
 });
 
 Deno.test("POST API parse test with 2 Japanese sentences", async () => {
-  const resp = await fetch("http://localhost:8080/parse", {
+  const resp = await fetch("http://localhost:8081/mecab", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
