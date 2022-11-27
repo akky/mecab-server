@@ -83,7 +83,7 @@ serve(async (request: Request) => {
   }
 
   // GET request handler for server health check
-  const PARSE_HEALTH = new URLPattern({ pathname: "/health" })
+  const PARSE_HEALTH = new URLPattern({ pathname: "/health" });
   if (request.method == "GET" && PARSE_HEALTH.exec(request.url)) {
     //return new Response(`Mecab API server is alive for ${request.url}`, { status: 200 });
     const responseJson = JSON.stringify({ status: 'ok', code: 200 });
