@@ -1,8 +1,23 @@
 {
+  /*
+   deno で mecab API server を動かす
+
+    # basic server test
+
+      * deno task server
+      * deno task test
+
+    # my app
+
+      * deno task mine
+      * deno task test-mine
+
+      */
   "tasks": {
     "server-on-docker": "docker-compose up",
     "server": "NEOLOGD_DIC_PATH=/usr/lib/x86_64-linux-gnu/mecab/dic/mecab-ipadic-neologd deno run --allow-run --allow-net=0.0.0.0 --allow-read=. --allow-env main.ts",
     "mine": "NEOLOGD_DIC_PATH=/usr/lib/x86_64-linux-gnu/mecab/dic/mecab-ipadic-neologd deno run --allow-run --allow-net=0.0.0.0 --allow-read=. --allow-env server.ts",
+    // deno API server が走った状態で実行する unit test
     "test": "deno test --allow-run --allow-net=localhost:8080 --allow-read=. tests/server_test.ts",
     "test-mine": "deno test --allow-run --allow-net=localhost:8081 --allow-read=. tests/oak_test.ts"
   }
